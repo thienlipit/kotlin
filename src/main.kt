@@ -42,14 +42,23 @@ fun main() {
     val listIphone: MutableList<ItemIphone> = mutableListOf()
 
     val doc: Document = Jsoup.connect("https://shopdunk.com/iphone").get()
+
+
     val container = doc.getElementsByClass("jet-listing-grid jet-listing").first()
+
+
     val elements: Elements? = container?.getElementsByClass("elementor-widget-wrap") ?: return
+
+//    println(elements)
 
     var count = 0
     for (el in elements!!) {
-
         val title = el.getElementsByClass("elementor-heading-title elementor-size-default").first()?.text()
-        val imageUrl = el.getElementsByTag("img").first()?.attr("src")
+//        val imageContainer =  el.getElementsByClass("elementor-image").first()?.getElementsByTag("img")?.attr("data-orig-file")
+//        println(imageContainer)
+
+
+        val imageUrl = el.getElementsByClass("elementor-image").first()?.getElementsByTag("img")?.attr("data-orig-file")
         val price = el.getElementsByClass("jet-listing-dynamic-field__content").first()?.text()
         val urlItem = el.getElementsByTag("a").first()?.attr("href")
         if (title != null && imageUrl != null && price != null && urlItem != null) {
