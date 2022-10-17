@@ -1,4 +1,5 @@
 import com.google.gson.Gson
+import detailIphone.DetailItemIphone
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -6,17 +7,18 @@ import java.io.File
 import java.io.FileWriter
 import java.io.PrintWriter
 
-data class Company(
-    var name: String,
-    var employees: Int,
-    var offices: List<String>
+data class DetailListImageIphone(
+    var url: String
 )
 
 data class ItemIphone(
+    var id: Int,
     var name: String,
     var price: String,
     var urlImage: String,
-    var urlDetail: String
+    var urlDetail: String,
+    var listImage: List<DetailListImageIphone>
+
 )
 
 data class User (
@@ -28,15 +30,6 @@ data class User (
 
 const val baseSavedPlantsPath = "./resources/data"
 fun main() {
-    val listCompany: MutableList<Company> = mutableListOf()
-    val companies = Company(
-        "Microsoft", 182268, listOf("California", "Washington", "Virginia")
-    )
-    val companies2 = Company(
-        "LG", 1000, listOf("Korea", "Tokyo")
-    )
-    listCompany.add(companies)
-    listCompany.add(companies2)
 
 
     val listIphone: MutableList<ItemIphone> = mutableListOf()
@@ -61,15 +54,41 @@ fun main() {
         val imageUrl = el.getElementsByClass("elementor-image").first()?.getElementsByTag("img")?.attr("data-orig-file")
         val price = el.getElementsByClass("jet-listing-dynamic-field__content").first()?.text()
         val urlItem = el.getElementsByTag("a").first()?.attr("href")
+
+
+        //-------------------------------------------------------------------------------
+        val detailListIphone: MutableList<DetailListImageIphone> = mutableListOf()
+        if ( !urlItem.isNullOrEmpty()) {
+            println("url: $urlItem")
+            var url = urlItem
+            val docImage: Document = Jsoup.connect("$url").get()
+
+            val containerImage = docImage.getElementsByClass("iconic-woothumbs-thumbnails__slide ")
+
+            for (element in containerImage) {
+                val imageUrl1 =
+                    element.getElementsByClass("iconic-woothumbs-thumbnails__image-wrapper").first()?.getElementsByTag("img")
+                        ?.attr("nitro-lazy-src")
+                if (imageUrl1 != null) {
+//                    val write = "{ 'url': '$imageUrl1' }"
+                    val imageItemIphone = DetailListImageIphone(imageUrl1)
+                    detailListIphone.add(imageItemIphone)
+
+                }
+            }
+
+        }
+        val distinct = detailListIphone.distinct().toList()
+
+        //---------------------------------------------------------------------------------
         if (title != null && imageUrl != null && price != null && urlItem != null) {
-            val itemIphone = ItemIphone(title, price, imageUrl, urlItem)
+            val itemIphone = ItemIphone(count, title, price, imageUrl, urlItem, distinct)
             listIphone.add(itemIphone)
-            println("$title --- $price --- $imageUrl --- $urlItem")
             count ++
         }
 
     }
-    println(count)
+//    println(count)
 
 
 //Cach thu nhat
