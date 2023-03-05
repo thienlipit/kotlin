@@ -36,7 +36,7 @@ private fun modInverse(a: Int, m: Int): Int {
     return -1
 }
 
-fun isPrime(n: Int): Boolean {
+private fun isPrime(n: Int): Boolean {
     if (n < 2) {
         return false
     } else if (n == 2) {

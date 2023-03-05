@@ -29,7 +29,7 @@ data class User (
 )
 
 const val baseSavedPlantsPath = "./resources/data"
-fun main() {
+fun RSABigInteger.main() {
 
 
     val listIphone: MutableList<ItemIphone> = mutableListOf()
